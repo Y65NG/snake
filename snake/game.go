@@ -1,6 +1,7 @@
 package snake
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/hajimehoshi/ebiten/v2"
@@ -22,6 +23,11 @@ const (
 	EndState
 )
 
+var (
+	Score        int
+	InitialSpeed int = 100
+)
+
 type Game struct {
 	boardImage *ebiten.Image
 	board      *Board
@@ -39,6 +45,8 @@ func (g *Game) nextState(state State) {
 func (g *Game) restart() {
 	g.board = NewBoard(boardSize)
 	g.state = StartMenuState
+	lastPressed = DirRight
+	Score = 0
 }
 
 func (g *Game) Layout(outsideWidth, outsideHeight int) (screenWidth, screenHeight int) {
@@ -58,7 +66,15 @@ func (g *Game) Update() error {
 		if err := g.board.Update(); err != nil {
 			g.nextState(EndState)
 		}
-		dt, _ := time.ParseDuration("0.1s")
+
+		var tArg string
+		if mul := Score / 15; mul < 10 {
+			tArg = fmt.Sprintf("%vms", InitialSpeed+mul*10)
+		} else {
+			tArg = fmt.Sprintf("%vms", InitialSpeed+100)
+		}
+
+		dt, _ := time.ParseDuration(tArg)
 		time.Sleep(dt)
 	case PausedState:
 		if inpututil.IsKeyJustPressed(ebiten.KeySpace) {
