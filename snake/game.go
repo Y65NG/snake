@@ -4,6 +4,7 @@ import (
 	"time"
 
 	"github.com/hajimehoshi/ebiten/v2"
+	"github.com/hajimehoshi/ebiten/v2/inpututil"
 )
 
 const (
@@ -31,17 +32,44 @@ func NewGame() *Game {
 	return &Game{nil, NewBoard(boardSize), StartMenuState}
 }
 
+func (g *Game) nextState(state State) {
+	g.state = state
+}
+
+func (g *Game) restart() {
+	g.board = NewBoard(boardSize)
+	g.state = StartMenuState
+}
+
 func (g *Game) Layout(outsideWidth, outsideHeight int) (screenWidth, screenHeight int) {
 	return ScreenWidth, ScreenHeight
 }
 
 func (g *Game) Update() error {
-	if err := g.board.Update(); err != nil {
-		return err
+	switch g.state {
+	case StartMenuState:
+		if inpututil.IsKeyJustPressed(ebiten.KeySpace) {
+			g.nextState(GameState)
+		}
+	case GameState:
+		if inpututil.IsKeyJustPressed(ebiten.KeySpace) {
+			g.nextState(PausedState)
+		}
+		if err := g.board.Update(); err != nil {
+			g.nextState(EndState)
+		}
+		dt, _ := time.ParseDuration("0.1s")
+		time.Sleep(dt)
+	case PausedState:
+		if inpututil.IsKeyJustPressed(ebiten.KeySpace) {
+			g.nextState(GameState)
+		}
+	case EndState:
+		if inpututil.IsKeyJustPressed(ebiten.KeySpace) {
+			g.restart()
+		}
 	}
-	// log.Println(g.board.snake.body, g.board.food)
-	dt, _ := time.ParseDuration("0.1s")
-	time.Sleep(dt)
+
 	return nil
 }
 
