@@ -16,7 +16,7 @@ const (
 )
 
 const (
-	tileSize   = 20
+	tileSize   = 20 + ScreenWidth/200
 	tileMargin = 1
 )
 
@@ -72,8 +72,8 @@ func (b *Board) Size() (int, int) {
 	return x, y
 }
 
-func (b *Board) Update() error {
-	if err := b.snake.Move(KeyToDir(), b); err != nil {
+func (b *Board) Update(g *Game) error {
+	if err := b.snake.Move(KeyToDir(), g); err != nil {
 		return err
 	}
 	size := b.size
@@ -114,7 +114,7 @@ func (b *Board) Draw(boardImage *ebiten.Image) {
 				// log.Println("food", j, i)
 				op.ColorScale.ScaleWithColor(foodColor)
 			} else {
-				op.ColorScale.ScaleWithColor(tileColorDark)
+				op.ColorScale.ScaleWithColor(tileColor)
 			}
 			boardImage.DrawImage(tileImage, op)
 		}

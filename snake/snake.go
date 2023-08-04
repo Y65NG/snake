@@ -23,7 +23,8 @@ func NewSnake() *Snake {
 var errSnakeCollision = errors.New("snake collided")
 
 // Return error if fail to move snake
-func (s *Snake) Move(dir Dir, board *Board) error {
+func (s *Snake) Move(dir Dir, game *Game) error {
+	board := game.board
 	pos := s.body[0]
 
 	switch dir {
@@ -31,7 +32,7 @@ func (s *Snake) Move(dir Dir, board *Board) error {
 		if board.food.x == pos.x && board.food.y == pos.y {
 			s.body = append([]snakeBody{{pos.x, pos.y - 1}}, s.body[:len(s.body)]...)
 			RefreshFood(board)
-			Score += 5
+			game.score += 5
 		} else if board.board[pos.y][pos.x] != blockTile {
 			s.body = append([]snakeBody{{pos.x, pos.y - 1}}, s.body[:len(s.body)-1]...)
 		} else {
@@ -41,7 +42,7 @@ func (s *Snake) Move(dir Dir, board *Board) error {
 		if board.food.x == pos.x && board.food.y == pos.y {
 			s.body = append([]snakeBody{{pos.x, pos.y + 1}}, s.body[:len(s.body)]...)
 			RefreshFood(board)
-			Score += 5
+			game.score += 5
 		} else if board.board[pos.y][pos.x] != blockTile {
 			s.body = append([]snakeBody{{pos.x, pos.y + 1}}, s.body[:len(s.body)-1]...)
 		} else {
@@ -51,7 +52,7 @@ func (s *Snake) Move(dir Dir, board *Board) error {
 		if board.food.x == pos.x && board.food.y == pos.y {
 			s.body = append([]snakeBody{{pos.x - 1, pos.y}}, s.body[:len(s.body)]...)
 			RefreshFood(board)
-			Score += 5
+			game.score += 5
 		} else if board.board[pos.y][pos.x] != blockTile {
 			s.body = append([]snakeBody{{pos.x - 1, pos.y}}, s.body[:len(s.body)-1]...)
 		} else {
@@ -61,7 +62,7 @@ func (s *Snake) Move(dir Dir, board *Board) error {
 		if board.food.x == pos.x && board.food.y == pos.y {
 			s.body = append([]snakeBody{{pos.x + 1, pos.y}}, s.body[:len(s.body)]...)
 			RefreshFood(board)
-			Score += 5
+			game.score += 5
 		} else if board.board[pos.y][pos.x] != blockTile {
 			s.body = append([]snakeBody{{pos.x + 1, pos.y}}, s.body[:len(s.body)-1]...)
 		} else {

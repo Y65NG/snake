@@ -10,7 +10,7 @@ import (
 func main() {
 	game := snake.NewGame()
 
-	ebiten.SetWindowSize(720, 540)
+	ebiten.SetWindowSize(snake.ScreenWidth, snake.ScreenHeight)
 	ebiten.SetWindowResizingMode(ebiten.WindowResizingModeEnabled)
 	ebiten.SetWindowTitle("Snake")
 	if err := ebiten.RunGame(game); err != nil {
