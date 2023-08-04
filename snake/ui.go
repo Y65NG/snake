@@ -17,18 +17,17 @@ func LoadStartMenu(g *Game) *ebitenui.UI {
 		widget.ContainerOpts.BackgroundImage(image.NewNineSliceColor(backgroundColor)),
 		widget.ContainerOpts.Layout(widget.NewRowLayout(
 			widget.RowLayoutOpts.Direction(widget.DirectionVertical),
-			widget.RowLayoutOpts.Padding(widget.Insets{Top: ScreenHeight / 2.5}),
+			widget.RowLayoutOpts.Padding(widget.Insets{Top: ScreenHeight / 3}),
 
 			widget.RowLayoutOpts.Spacing(20),
 		),
 		),
 	)
-	// startButtonContainer := newContainer()
+
+	titleText := newText("Snake")
 	startButton := newButton("Start", func(*widget.ButtonClickedEventArgs) { g.reset(); g.nextState(GameState) })
-	// startButtonContainer.AddChild(startButton)
-	// exitButtonContainer := newContainer()
 	exitButton := newButton("Exit", func(*widget.ButtonClickedEventArgs) { g.exit() })
-	// exitButtonContainer.AddChild(exitButton)
+	rootContainer.AddChild(titleText)
 	rootContainer.AddChild(startButton)
 	rootContainer.AddChild(exitButton)
 
@@ -75,19 +74,11 @@ func LoadEndMenu(g *Game) *ebitenui.UI {
 		),
 		),
 	)
-	scoreButton := newButton(fmt.Sprintf("Your Score: %v", g.score), func(*widget.ButtonClickedEventArgs) {})
-	scoreImage := loadButtonImage()
-	scoreImage.Idle = image.NewNineSliceColor(backgroundColor)
-	scoreImage.Hover = image.NewNineSliceColor(backgroundColor)
-	scoreImage.Pressed = image.NewNineSliceColor(backgroundColor)
-	scoreButton.Configure(
-		widget.ButtonOpts.Image(
-			scoreImage,
-		),
-	)
+
+	scoreText := newText(fmt.Sprintf("Your Score: %v", g.score))
 	restartButton := newButton("Restart", func(*widget.ButtonClickedEventArgs) { g.reset(); g.nextState(GameState) })
 	backButton := newButton("Back", func(*widget.ButtonClickedEventArgs) { g.reset() })
-	rootContainer.AddChild(scoreButton)
+	rootContainer.AddChild(scoreText)
 	rootContainer.AddChild(restartButton)
 	rootContainer.AddChild(backButton)
 
@@ -95,6 +86,20 @@ func LoadEndMenu(g *Game) *ebitenui.UI {
 		Container: rootContainer,
 	}
 	return ui
+}
+
+func newText(text string) *widget.Button {
+	result := newButton(text, func(*widget.ButtonClickedEventArgs) {})
+	resultImage := loadButtonImage()
+	resultImage.Idle = image.NewNineSliceColor(backgroundColor)
+	resultImage.Hover = image.NewNineSliceColor(backgroundColor)
+	resultImage.Pressed = image.NewNineSliceColor(backgroundColor)
+	result.Configure(
+		widget.ButtonOpts.Image(
+			resultImage,
+		),
+	)
+	return result
 }
 
 func newButton(text string, onClick func(*widget.ButtonClickedEventArgs)) *widget.Button {
