@@ -65,6 +65,9 @@ func (g *Game) reset() {
 	g.board = NewBoard(boardSize)
 	g.state = StartMenuState
 	lastPressed = DirRight
+	if g.score > g.highestScore {
+		SetHighestScore(g.score, "./score.txt")
+	}
 	g.score = 0
 	g.highestScore = GetHighestScore("./score.txt")
 	g.ui = LoadStartMenu(g)
@@ -190,7 +193,7 @@ func (g *Game) Draw(screen *ebiten.Image) {
 
 		// Draw score
 		if g.scoreImage == nil {
-			g.scoreImage = ebiten.NewImage(200, 100)
+			g.scoreImage = ebiten.NewImage(150+15*(len(strconv.Itoa(g.highestScore))-1), 100)
 		}
 		g.scoreImage.Fill(scoreBackgroundColor)
 		op = &ebiten.DrawImageOptions{}
